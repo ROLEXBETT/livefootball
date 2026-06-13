@@ -1,3 +1,5 @@
+from dotenv import load_dotenv
+load_dotenv()
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
@@ -14,7 +16,7 @@ CORS(app)
 # CONFIG
 # =========================
 
-API_KEY = os.getenv("API_FOOTBALL_KEY", "284126ee84e225b11d0bbd882bdf17ef")
+API_KEY = os.getenv("API_FOOTBALL_KEY", "af5e9db0bef8b34a4eff99bc3c1941ca")
 
 HEADERS = {
     "x-apisports-key": API_KEY

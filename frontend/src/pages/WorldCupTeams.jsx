@@ -7,6 +7,7 @@ function WorldCupTeams() {
   const [teams, setTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     loadTeams();
@@ -16,6 +17,7 @@ function WorldCupTeams() {
     try {
       setLoading(true);
       setUsingFallback(false);
+      setMessage("");
 
       const res = await API.get("/worldcup/teams");
 
@@ -29,11 +31,17 @@ function WorldCupTeams() {
       } else {
         setTeams(FALLBACK_WORLD_CUP_TEAMS);
         setUsingFallback(true);
+        setMessage(
+          "World Cup teams could not be loaded right now. Showing saved teams."
+        );
       }
     } catch (error) {
-      console.log("World Cup teams error:", error);
+      console.error("World Cup teams error:", error);
       setTeams(FALLBACK_WORLD_CUP_TEAMS);
       setUsingFallback(true);
+      setMessage(
+        "Unable to connect to the backend. Showing saved World Cup teams."
+      );
     } finally {
       setLoading(false);
     }
@@ -42,39 +50,49 @@ function WorldCupTeams() {
   if (loading) return <Loader />;
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="page">
       <h1>👥 World Cup Squads</h1>
 
-      <p style={{ color: "#cbd5e1", marginBottom: "16px" }}>
+      <p style={{ color: "#cbd5e1", marginBottom: "20px" }}>
         Select a country to view its World Cup squad.
       </p>
 
-      {usingFallback && (
+      {message && (
         <div
           style={{
-            background: "#78350f",
-            color: "#fde68a",
-            padding: "14px 16px",
-            borderRadius: "12px",
-            marginBottom: "20px",
+            background: usingFallback ? "#78350f" : "#7f1d1d",
+            color: usingFallback ? "#fde68a" : "white",
+            padding: "16px",
+            borderRadius: "14px",
+            marginBottom: "24px",
             maxWidth: "760px",
           }}
         >
-          API limit reached or teams could not be loaded. Showing saved World Cup
-          teams for now.
+          {message}
         </div>
       )}
 
       {teams.length === 0 ? (
-        <p>No World Cup teams available.</p>
-      ) : (
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-            gap: "16px",
+            background: "#1e293b",
+            padding: "24px",
+            borderRadius: "16px",
+            border: "1px solid #263449",
+            color: "#cbd5e1",
+            maxWidth: "640px",
           }}
         >
+          <h2 style={{ color: "white", marginTop: 0 }}>
+            No World Cup teams available
+          </h2>
+
+          <p style={{ marginBottom: 0 }}>
+            Team data is not available right now. Please check back later.
+          </p>
+        </div>
+      ) : (
+        <div className="card-grid">
           {teams.map((item) => {
             const team = item.team || item;
 
@@ -84,27 +102,53 @@ function WorldCupTeams() {
                 to={`/worldcup/squad/${team.id}`}
                 style={{
                   background: "#1e293b",
-                  borderRadius: "16px",
+                  borderRadius: "18px",
                   padding: "20px",
                   color: "white",
                   textDecoration: "none",
                   display: "flex",
                   alignItems: "center",
                   gap: "14px",
-                  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+                  border: "1px solid #263449",
+                  minHeight: "96px",
                 }}
               >
                 <img
                   src={team.logo}
                   alt={team.name}
                   style={{
-                    width: "44px",
-                    height: "44px",
+                    width: "52px",
+                    height: "52px",
                     objectFit: "contain",
+                    background: "white",
+                    borderRadius: "50%",
+                    padding: "6px",
+                    flexShrink: 0,
                   }}
                 />
 
-                <strong>{team.name}</strong>
+                <div>
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: "20px",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {team.name}
+                  </h2>
+
+                  <p
+                    style={{
+                      color: "#94a3b8",
+                      margin: "6px 0 0",
+                      fontSize: "14px",
+                    }}
+                  >
+                    View squad →
+                  </p>
+                </div>
               </Link>
             );
           })}

@@ -7,6 +7,7 @@ function WorldCupBracket() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [usingFallback, setUsingFallback] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     loadBracket();
@@ -16,6 +17,7 @@ function WorldCupBracket() {
     try {
       setLoading(true);
       setUsingFallback(false);
+      setMessage("");
 
       const res = await API.get("/worldcup/knockout");
 
@@ -41,11 +43,17 @@ function WorldCupBracket() {
       } else {
         setMatches(FALLBACK_KNOCKOUT_MATCHES);
         setUsingFallback(true);
+        setMessage(
+          "Knockout matches could not be loaded right now. Showing saved World Cup knockout data."
+        );
       }
     } catch (error) {
-      console.log("World Cup bracket error:", error);
+      console.error("World Cup bracket error:", error);
       setMatches(FALLBACK_KNOCKOUT_MATCHES);
       setUsingFallback(true);
+      setMessage(
+        "Unable to connect to the backend. Showing saved World Cup knockout data."
+      );
     } finally {
       setLoading(false);
     }
@@ -66,109 +74,92 @@ function WorldCupBracket() {
   if (loading) return <Loader />;
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="page">
       <h1>🏆 World Cup Knockout Stage</h1>
 
       <p style={{ color: "#cbd5e1", marginTop: "8px", marginBottom: "20px" }}>
         Follow the knockout path from the Round of 16 to the Final.
       </p>
 
-      {usingFallback && (
+      {message && (
         <div
           style={{
-            background: "#78350f",
-            color: "#fde68a",
-            padding: "14px 16px",
-            borderRadius: "12px",
-            marginBottom: "20px",
+            background: usingFallback ? "#78350f" : "#7f1d1d",
+            color: usingFallback ? "#fde68a" : "white",
+            padding: "16px",
+            borderRadius: "14px",
+            marginBottom: "24px",
             maxWidth: "760px",
           }}
         >
-          API limit reached or knockout matches could not be loaded. Showing
-          saved World Cup knockout data for now.
+          {message}
         </div>
       )}
 
       {matches.length === 0 ? (
-        <div
-          style={{
-            background: "#1e293b",
-            padding: "24px",
-            borderRadius: "16px",
-            color: "#cbd5e1",
-          }}
-        >
-          <h2 style={{ color: "white", marginTop: 0 }}>
-            No knockout matches found
-          </h2>
-          <p>Check back later for knockout fixtures.</p>
-        </div>
+        <EmptyState
+          title="No knockout matches found"
+          text="Check back later for knockout fixtures."
+        />
       ) : (
         Object.entries(groupedMatches).map(([round, roundMatches]) => (
           <section key={round} style={{ marginBottom: "32px" }}>
             <h2 style={{ marginBottom: "16px" }}>{round}</h2>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-                gap: "16px",
-              }}
-            >
+            <div className="card-grid">
               {roundMatches.map((match) => (
-                <div
-                  key={match.fixture.id}
-                  style={{
-                    background: "#1e293b",
-                    padding: "20px",
-                    borderRadius: "16px",
-                    boxShadow: "0 6px 18px rgba(0,0,0,0.25)",
-                  }}
-                >
-                  <h3 style={{ margin: "0 0 14px 0" }}>
+                <div key={match.fixture.id} style={matchCardStyle}>
+                  <h3
+                    style={{
+                      margin: "0 0 16px 0",
+                      lineHeight: 1.3,
+                    }}
+                  >
                     {match.teams?.home?.name || "TBD"} vs{" "}
                     {match.teams?.away?.name || "TBD"}
                   </h3>
 
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      gap: "12px",
-                    }}
-                  >
+                  <div style={scoreRowStyle}>
                     <TeamBlock team={match.teams?.home} />
 
-                    <strong style={{ fontSize: "28px", minWidth: "70px" }}>
+                    <strong style={scoreStyle}>
                       {match.goals?.home ?? "—"} : {match.goals?.away ?? "—"}
                     </strong>
 
                     <TeamBlock team={match.teams?.away} />
                   </div>
 
-                  <p
+                  <div
                     style={{
-                      margin: "16px 0 0 0",
-                      color: "#cbd5e1",
-                      fontSize: "14px",
+                      background: "#0f172a",
+                      padding: "12px",
+                      borderRadius: "12px",
+                      marginTop: "16px",
                     }}
                   >
-                    {match.fixture?.date
-                      ? new Date(match.fixture.date).toLocaleString()
-                      : "Date unavailable"}
-                  </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        color: "#cbd5e1",
+                        fontSize: "14px",
+                      }}
+                    >
+                      {match.fixture?.date
+                        ? new Date(match.fixture.date).toLocaleString()
+                        : "Date unavailable"}
+                    </p>
 
-                  <p
-                    style={{
-                      margin: "6px 0 0 0",
-                      color: "#38bdf8",
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {getMatchStatus(match)}
-                  </p>
+                    <p
+                      style={{
+                        margin: "6px 0 0 0",
+                        color: "#38bdf8",
+                        fontSize: "14px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {getMatchStatus(match)}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -181,21 +172,41 @@ function WorldCupBracket() {
 
 function TeamBlock({ team }) {
   return (
-    <div style={{ textAlign: "center", width: "95px" }}>
-      {team?.logo && (
-        <img
-          src={team.logo}
-          alt={team.name}
-          style={{
-            width: "44px",
-            height: "44px",
-            objectFit: "contain",
-            marginBottom: "8px",
-          }}
-        />
+    <div style={teamBlockStyle}>
+      {team?.logo ? (
+        <img src={team.logo} alt={team.name} style={logoStyle} />
+      ) : (
+        <div style={emptyLogoStyle}>?</div>
       )}
 
-      <p style={{ margin: 0, fontSize: "14px" }}>{team?.name || "TBD"}</p>
+      <p
+        style={{
+          margin: 0,
+          fontSize: "14px",
+          color: "#e2e8f0",
+          lineHeight: 1.25,
+        }}
+      >
+        {team?.name || "TBD"}
+      </p>
+    </div>
+  );
+}
+
+function EmptyState({ title, text }) {
+  return (
+    <div
+      style={{
+        background: "#1e293b",
+        padding: "24px",
+        borderRadius: "16px",
+        border: "1px solid #263449",
+        color: "#cbd5e1",
+        maxWidth: "640px",
+      }}
+    >
+      <h2 style={{ color: "white", marginTop: 0 }}>{title}</h2>
+      <p style={{ marginBottom: 0 }}>{text}</p>
     </div>
   );
 }
@@ -217,8 +228,66 @@ function getMatchStatus(match) {
     return "Match finished";
   }
 
-  return `⏳ ${matchDate.diff(dayjs(), "hour")} hours remaining`;
+  const hoursRemaining = matchDate.diff(dayjs(), "hour");
+
+  if (hoursRemaining <= 0) {
+    return "Starting soon";
+  }
+
+  return `⏳ ${hoursRemaining} hours remaining`;
 }
+
+const matchCardStyle = {
+  background: "#1e293b",
+  padding: "20px",
+  borderRadius: "18px",
+  border: "1px solid #263449",
+  boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+  color: "white",
+};
+
+const scoreRowStyle = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  gap: "12px",
+};
+
+const scoreStyle = {
+  fontSize: "26px",
+  minWidth: "76px",
+  textAlign: "center",
+  whiteSpace: "nowrap",
+};
+
+const teamBlockStyle = {
+  textAlign: "center",
+  width: "95px",
+  minWidth: "80px",
+};
+
+const logoStyle = {
+  width: "48px",
+  height: "48px",
+  objectFit: "contain",
+  marginBottom: "8px",
+  background: "white",
+  borderRadius: "50%",
+  padding: "5px",
+};
+
+const emptyLogoStyle = {
+  width: "48px",
+  height: "48px",
+  margin: "0 auto 8px",
+  background: "#0f172a",
+  borderRadius: "50%",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#94a3b8",
+  fontWeight: "bold",
+};
 
 const FALLBACK_KNOCKOUT_MATCHES = [
   {
@@ -269,7 +338,7 @@ const FALLBACK_KNOCKOUT_MATCHES = [
     teams: {
       home: {
         name: "France",
-        logo: "https://media.api-sports.io/football/teams/20.png",
+        logo: "https://media.api-sports.io/football/teams/2.png",
       },
       away: {
         name: "Poland",
@@ -288,7 +357,7 @@ const FALLBACK_KNOCKOUT_MATCHES = [
     teams: {
       home: {
         name: "England",
-        logo: "https://media.api-sports.io/football/teams/21.png",
+        logo: "https://media.api-sports.io/football/teams/10.png",
       },
       away: {
         name: "Senegal",
@@ -364,11 +433,11 @@ const FALLBACK_KNOCKOUT_MATCHES = [
     teams: {
       home: {
         name: "France",
-        logo: "https://media.api-sports.io/football/teams/20.png",
+        logo: "https://media.api-sports.io/football/teams/2.png",
       },
       away: {
         name: "Morocco",
-        logo: "https://media.api-sports.io/football/teams/767.png",
+        logo: "https://media.api-sports.io/football/teams/31.png",
       },
     },
     goals: { home: 2, away: 0 },
@@ -387,7 +456,7 @@ const FALLBACK_KNOCKOUT_MATCHES = [
       },
       away: {
         name: "Morocco",
-        logo: "https://media.api-sports.io/football/teams/767.png",
+        logo: "https://media.api-sports.io/football/teams/31.png",
       },
     },
     goals: { home: 2, away: 1 },
@@ -406,7 +475,7 @@ const FALLBACK_KNOCKOUT_MATCHES = [
       },
       away: {
         name: "France",
-        logo: "https://media.api-sports.io/football/teams/20.png",
+        logo: "https://media.api-sports.io/football/teams/2.png",
       },
     },
     goals: { home: 3, away: 3 },

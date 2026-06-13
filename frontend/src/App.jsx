@@ -20,7 +20,6 @@ import WorldCupBracket from "./pages/WorldCupBracket";
 import WorldCupTeamStats from "./pages/WorldCupTeamStats";
 import WorldCupTeams from "./pages/WorldCupTeams";
 
-
 function App() {
   return (
     <div
@@ -29,68 +28,78 @@ function App() {
         background: "#0f172a",
         color: "white",
         paddingBottom: "90px",
+        overflowX: "hidden",
       }}
     >
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
 
-        <Route path="/live" element={<LiveMatches />} />
-        <Route path="/match/:id" element={<MatchDetails />} />
+          <Route path="/live" element={<LiveMatches />} />
+          <Route path="/match/:id" element={<MatchDetails />} />
 
-        <Route path="/worldcup" element={<WorldCup />} />
-        <Route path="/worldcup/bracket" element={<WorldCupBracket />} />
-        <Route path="/worldcup/stadiums" element={<Stadiums />} />
-        <Route path="/worldcup/topscorers" element={<WorldCupTopScorers />} />
+          <Route path="/worldcup" element={<WorldCup />} />
+          <Route path="/worldcup/bracket" element={<WorldCupBracket />} />
+          <Route path="/worldcup/stadiums" element={<Stadiums />} />
+          <Route
+            path="/worldcup/topscorers"
+            element={<WorldCupTopScorers />}
+          />
+          <Route path="/worldcup/squads" element={<WorldCupTeams />} />
+          <Route path="/worldcup/squad/:teamId" element={<WorldCupSquad />} />
+          <Route path="/worldcup/teamstats" element={<WorldCup />} />
+          <Route
+            path="/worldcup/teamstats/:teamId"
+            element={<WorldCupTeamStats />}
+          />
 
-        <Route path="/standings" element={<Standings />} />
-        <Route path="/topscorers" element={<TopScorers />} />
+          <Route path="/standings" element={<Standings />} />
+          <Route path="/topscorers" element={<TopScorers />} />
 
-        <Route path="/search" element={<SearchTeams />} />
-        <Route path="/team/:id" element={<TeamDetails />} />
-        <Route path="/player/:id" element={<PlayerDetails />} />
+          <Route path="/search" element={<SearchTeams />} />
+          <Route path="/team/:id" element={<TeamDetails />} />
+          <Route path="/player/:id" element={<PlayerDetails />} />
 
-        <Route path="/favorites" element={<Favorites />} />
+          <Route path="/favorites" element={<Favorites />} />
 
-        <Route path="/worldcup/squads" element={<WorldCupTeams />} />
-        <Route path="/worldcup/squad/:teamId" element={<WorldCupSquad />} />
+          <Route
+            path="/WorldCupBracket"
+            element={<Navigate to="/worldcup/bracket" replace />}
+          />
+          <Route path="/WorldCup" element={<Navigate to="/worldcup" replace />} />
 
-        <Route path="/worldcup/teamstats" element={<WorldCup />} />
-        <Route path="/worldcup/teamstats/:teamId" element={<WorldCupTeamStats />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
 
-        <Route path="/WorldCupBracket" element={<Navigate to="/worldcup/bracket" replace />} />
-        <Route path="/WorldCup" element={<Navigate to="/worldcup" replace />} />
+      <nav className="mobile-bottom-nav" aria-label="Mobile bottom navigation">
+        <Link to="/" className="bottom-nav-link">
+          <span>🏠</span>
+          <small>Home</small>
+        </Link>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+        <Link to="/live" className="bottom-nav-link">
+          <span>🔴</span>
+          <small>Live</small>
+        </Link>
 
-      <div className="mobile-bottom-nav">
-  <Link to="/" className="bottom-nav-link">
-    <span>🏠</span>
-    <small>Home</small>
-  </Link>
+        <Link to="/worldcup" className="bottom-nav-link">
+          <span>🌎</span>
+          <small>World Cup</small>
+        </Link>
 
-  <Link to="/live" className="bottom-nav-link">
-    <span>🔴</span>
-    <small>Live</small>
-  </Link>
+        <Link to="/standings" className="bottom-nav-link">
+          <span>📊</span>
+          <small>Stats</small>
+        </Link>
 
-  <Link to="/worldcup" className="bottom-nav-link">
-    <span>🌎</span>
-    <small>World Cup</small>
-  </Link>
-
-  <Link to="/standings" className="bottom-nav-link">
-    <span>📊</span>
-    <small>Stats</small>
-  </Link>
-
-  <Link to="/favorites" className="bottom-nav-link">
-    <span>⭐</span>
-    <small>Saved</small>
-  </Link>
-  </div>
+        <Link to="/favorites" className="bottom-nav-link">
+          <span>⭐</span>
+          <small>Saved</small>
+        </Link>
+      </nav>
     </div>
   );
 }

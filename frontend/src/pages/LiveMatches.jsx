@@ -58,7 +58,7 @@ function LiveMatches() {
   const isApiLimitMessage = message.includes("API request limit");
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="page">
       <h1>🔴 Live Matches</h1>
 
       <p style={{ color: "#cbd5e1", marginBottom: "24px" }}>
@@ -117,13 +117,7 @@ function LiveMatches() {
           </Link>
         </div>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-            gap: "16px",
-          }}
-        >
+        <div className="page">
           {matches.map((match) => (
             <MatchCard key={match.fixture.id} match={match} />
           ))}

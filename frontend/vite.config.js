@@ -10,7 +10,7 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       manifest: {
-        name: "Football Live",
+        name: "LivePulse",
         short_name: "FootballLive",
         description:
           "Live football scores, World Cup fixtures, standings, squads, stadiums, and scorers.",

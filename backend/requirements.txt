@@ -1,0 +1,7 @@
+Flask
+flask-cors
+requests
+mysql-connector-python
+firebase-admin
+gunicorn
+python-dotenv

@@ -3,10 +3,182 @@ import { Link } from "react-router-dom";
 import API from "../services/api";
 import Loader from "../components/Loader";
 
+const FALLBACK_FIXTURES = [
+  {
+    fixture: {
+      id: 66456904,
+      date: "2026-06-11T19:00:00Z",
+      status: { long: "Scheduled", short: "NS" },
+    },
+    teams: {
+      home: {
+        name: "Mexico",
+        logo: "https://media.api-sports.io/football/teams/16.png",
+      },
+      away: {
+        name: "South Africa",
+        logo: "https://media.api-sports.io/football/teams/24.png",
+      },
+    },
+    goals: { home: null, away: null },
+  },
+  {
+    fixture: {
+      id: 66456940,
+      date: "2026-06-13T01:00:00Z",
+      status: { long: "Scheduled", short: "NS" },
+    },
+    teams: {
+      home: {
+        name: "United States",
+        logo: "https://media.api-sports.io/football/teams/2384.png",
+      },
+      away: {
+        name: "Paraguay",
+        logo: "https://media.api-sports.io/football/teams/14.png",
+      },
+    },
+    goals: { home: null, away: null },
+  },
+  {
+    fixture: {
+      id: 66456928,
+      date: "2026-06-13T22:00:00Z",
+      status: { long: "Scheduled", short: "NS" },
+    },
+    teams: {
+      home: {
+        name: "Brazil",
+        logo: "https://media.api-sports.io/football/teams/6.png",
+      },
+      away: {
+        name: "Morocco",
+        logo: "https://media.api-sports.io/football/teams/31.png",
+      },
+    },
+    goals: { home: null, away: null },
+  },
+  {
+    fixture: {
+      id: 66457018,
+      date: "2026-06-17T01:00:00Z",
+      status: { long: "Scheduled", short: "NS" },
+    },
+    teams: {
+      home: {
+        name: "Argentina",
+        logo: "https://media.api-sports.io/football/teams/26.png",
+      },
+      away: {
+        name: "Algeria",
+        logo: "https://media.api-sports.io/football/teams/34.png",
+      },
+    },
+    goals: { home: null, away: null },
+  },
+];
+
+const FALLBACK_STANDINGS = [
+  {
+    league: {
+      id: 1,
+      name: "FIFA World Cup",
+      standings: [
+        [
+          {
+            rank: 1,
+            group: "Group A",
+            team: {
+              id: 16,
+              name: "Mexico",
+              logo: "https://media.api-sports.io/football/teams/16.png",
+            },
+            points: 3,
+          },
+          {
+            rank: 2,
+            group: "Group A",
+            team: {
+              id: 17,
+              name: "South Korea",
+              logo: "https://media.api-sports.io/football/teams/17.png",
+            },
+            points: 3,
+          },
+          {
+            rank: 3,
+            group: "Group A",
+            team: {
+              id: 24,
+              name: "South Africa",
+              logo: "https://media.api-sports.io/football/teams/24.png",
+            },
+            points: 0,
+          },
+          {
+            rank: 4,
+            group: "Group A",
+            team: {
+              id: 21,
+              name: "Czechia",
+              logo: "https://media.api-sports.io/football/teams/21.png",
+            },
+            points: 0,
+          },
+        ],
+        [
+          {
+            rank: 1,
+            group: "Group B",
+            team: {
+              id: 5529,
+              name: "Canada",
+              logo: "https://media.api-sports.io/football/teams/5529.png",
+            },
+            points: 1,
+          },
+          {
+            rank: 2,
+            group: "Group B",
+            team: {
+              id: 1118,
+              name: "Bosnia and Herzegovina",
+              logo: "https://media.api-sports.io/football/teams/1118.png",
+            },
+            points: 1,
+          },
+          {
+            rank: 3,
+            group: "Group B",
+            team: {
+              id: 1569,
+              name: "Qatar",
+              logo: "https://media.api-sports.io/football/teams/1569.png",
+            },
+            points: 0,
+          },
+          {
+            rank: 4,
+            group: "Group B",
+            team: {
+              id: 15,
+              name: "Switzerland",
+              logo: "https://media.api-sports.io/football/teams/15.png",
+            },
+            points: 0,
+          },
+        ],
+      ],
+    },
+  },
+];
+
 function WorldCup() {
   const [fixtures, setFixtures] = useState([]);
   const [standings, setStandings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [message, setMessage] = useState("");
+  const [usingFallback, setUsingFallback] = useState(false);
 
   useEffect(() => {
     loadWorldCup();
@@ -15,14 +187,52 @@ function WorldCup() {
   const loadWorldCup = async () => {
     try {
       setLoading(true);
+      setMessage("");
+      setUsingFallback(false);
 
-      const fixturesRes = await API.get("/worldcup/fixtures");
-      const standingsRes = await API.get("/worldcup/standings");
+      const [fixturesRes, standingsRes] = await Promise.all([
+        API.get("/worldcup/fixtures"),
+        API.get("/worldcup/standings"),
+      ]);
 
-      setFixtures(fixturesRes.data.response || []);
-      setStandings(standingsRes.data.response || []);
+      const fixturesHasError =
+        fixturesRes.data.errors &&
+        Object.keys(fixturesRes.data.errors).length > 0;
+
+      const standingsHasError =
+        standingsRes.data.errors &&
+        Object.keys(standingsRes.data.errors).length > 0;
+
+      const liveFixtures = fixturesRes.data.response || [];
+      const liveStandings = standingsRes.data.response || [];
+
+      if (
+        fixturesHasError ||
+        standingsHasError ||
+        liveFixtures.length === 0 ||
+        liveStandings.length === 0
+      ) {
+        setFixtures(liveFixtures.length > 0 ? liveFixtures : FALLBACK_FIXTURES);
+        setStandings(
+          liveStandings.length > 0 ? liveStandings : FALLBACK_STANDINGS
+        );
+        setUsingFallback(true);
+        setMessage(
+          "Some World Cup data could not be loaded right now. Showing saved tournament data where needed."
+        );
+        return;
+      }
+
+      setFixtures(liveFixtures);
+      setStandings(liveStandings);
     } catch (error) {
-      console.log("World Cup loading error:", error);
+      console.error("World Cup loading error:", error);
+      setFixtures(FALLBACK_FIXTURES);
+      setStandings(FALLBACK_STANDINGS);
+      setUsingFallback(true);
+      setMessage(
+        "Unable to connect to the backend. Showing saved World Cup data."
+      );
     } finally {
       setLoading(false);
     }
@@ -31,22 +241,30 @@ function WorldCup() {
   if (loading) return <Loader />;
 
   return (
-    <div style={{ padding: "24px" }}>
+    <div className="page">
       <h1>🌎 FIFA World Cup Hub</h1>
 
       <p style={{ color: "#cbd5e1", marginBottom: "24px" }}>
-        Fixtures, group standings, squads, stadiums, knockout bracket, team stats,
-        and World Cup scorers.
+        Fixtures, group standings, squads, stadiums, knockout bracket, team
+        stats, and World Cup scorers.
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-          gap: "16px",
-          marginBottom: "32px",
-        }}
-      >
+      {message && (
+        <div
+          style={{
+            background: usingFallback ? "#78350f" : "#7f1d1d",
+            color: usingFallback ? "#fde68a" : "white",
+            padding: "16px",
+            borderRadius: "14px",
+            marginBottom: "24px",
+            maxWidth: "760px",
+          }}
+        >
+          {message}
+        </div>
+      )}
+
+      <div className="card-grid" style={{ marginBottom: "32px" }}>
         <Link to="/worldcup/bracket" style={featureCardStyle}>
           <h2>🏆 Bracket</h2>
           <p>View knockout rounds and final path.</p>
@@ -81,28 +299,23 @@ function WorldCup() {
       <h2>📅 Fixtures</h2>
 
       {fixtures.length === 0 ? (
-        <p>No fixtures available.</p>
+        <EmptyState
+          title="No fixtures available"
+          text="World Cup fixtures could not be loaded right now."
+        />
       ) : (
-        <div style={gridStyle}>
+        <div className="card-grid">
           {fixtures.slice(0, 8).map((match) => (
             <Link
               key={match.fixture.id}
               to={`/match/${match.fixture.id}`}
               style={matchCardStyle}
             >
-              <h3 style={{ margin: "0 0 10px 0" }}>
+              <h3 style={{ margin: "0 0 10px 0", lineHeight: 1.3 }}>
                 {match.teams.home.name} vs {match.teams.away.name}
               </h3>
 
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: "12px",
-                  margin: "14px 0",
-                }}
-              >
+              <div style={scoreRowStyle}>
                 <div style={teamStyle}>
                   <img
                     src={match.teams.home.logo}
@@ -112,7 +325,7 @@ function WorldCup() {
                   <span>{match.teams.home.name}</span>
                 </div>
 
-                <strong style={{ fontSize: "24px" }}>
+                <strong style={{ fontSize: "24px", whiteSpace: "nowrap" }}>
                   {match.goals.home ?? "-"} : {match.goals.away ?? "-"}
                 </strong>
 
@@ -126,7 +339,7 @@ function WorldCup() {
                 </div>
               </div>
 
-              <p style={{ margin: "0", color: "#cbd5e1" }}>
+              <p style={{ margin: "0", color: "#cbd5e1", fontSize: "14px" }}>
                 {new Date(match.fixture.date).toLocaleString()}
               </p>
 
@@ -141,7 +354,10 @@ function WorldCup() {
       <h2 style={{ marginTop: "36px" }}>📊 Group Standings</h2>
 
       {standings.length === 0 ? (
-        <p>No standings available.</p>
+        <EmptyState
+          title="No standings available"
+          text="World Cup group standings could not be loaded right now."
+        />
       ) : (
         standings.map((group) => (
           <div key={group.league.id} style={sectionCardStyle}>
@@ -149,7 +365,7 @@ function WorldCup() {
 
             {group.league.standings?.map((standingGroup, index) => (
               <div key={index} style={{ marginBottom: "18px" }}>
-                <h4 style={{ color: "#38bdf8" }}>
+                <h4 style={{ color: "#38bdf8", marginBottom: "10px" }}>
                   {standingGroup[0]?.group || `Group ${index + 1}`}
                 </h4>
 
@@ -159,23 +375,48 @@ function WorldCup() {
                     to={`/worldcup/teamstats/${team.team.id}`}
                     style={standingRowStyle}
                   >
-                    <span>
-                      {team.rank}.{" "}
+                    <span
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        minWidth: 0,
+                      }}
+                    >
+                      <span>{team.rank}.</span>
+
                       <img
                         src={team.team.logo}
                         alt={team.team.name}
                         style={{
-                          width: "20px",
-                          height: "20px",
+                          width: "22px",
+                          height: "22px",
                           objectFit: "contain",
-                          verticalAlign: "middle",
-                          marginRight: "6px",
+                          background: "white",
+                          borderRadius: "50%",
+                          padding: "3px",
+                          flexShrink: 0,
                         }}
                       />
-                      {team.team.name}
+
+                      <span
+                        style={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {team.team.name}
+                      </span>
                     </span>
 
-                    <span style={{ color: "#10b981", fontWeight: "bold" }}>
+                    <span
+                      style={{
+                        color: "#10b981",
+                        fontWeight: "bold",
+                        flexShrink: 0,
+                      }}
+                    >
                       {team.points} pts
                     </span>
                   </Link>
@@ -189,19 +430,32 @@ function WorldCup() {
   );
 }
 
+function EmptyState({ title, text }) {
+  return (
+    <div
+      style={{
+        background: "#1e293b",
+        padding: "24px",
+        borderRadius: "16px",
+        border: "1px solid #263449",
+        color: "#cbd5e1",
+        maxWidth: "640px",
+      }}
+    >
+      <h2 style={{ color: "white", marginTop: 0 }}>{title}</h2>
+      <p style={{ marginBottom: 0 }}>{text}</p>
+    </div>
+  );
+}
+
 const featureCardStyle = {
   background: "#111827",
   padding: "20px",
-  borderRadius: "14px",
+  borderRadius: "16px",
   textDecoration: "none",
   color: "white",
   border: "1px solid #1f2937",
-};
-
-const gridStyle = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-  gap: "16px",
+  minHeight: "145px",
 };
 
 const matchCardStyle = {
@@ -211,12 +465,22 @@ const matchCardStyle = {
   color: "white",
   textDecoration: "none",
   boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  border: "1px solid #263449",
+};
+
+const scoreRowStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: "12px",
+  margin: "14px 0",
 };
 
 const teamStyle = {
   width: "90px",
   textAlign: "center",
   fontSize: "14px",
+  color: "#e2e8f0",
 };
 
 const logoStyle = {
@@ -225,6 +489,9 @@ const logoStyle = {
   objectFit: "contain",
   display: "block",
   margin: "0 auto 8px",
+  background: "white",
+  borderRadius: "50%",
+  padding: "5px",
 };
 
 const sectionCardStyle = {
@@ -233,16 +500,18 @@ const sectionCardStyle = {
   padding: "20px",
   marginBottom: "20px",
   boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  border: "1px solid #263449",
 };
 
 const standingRowStyle = {
   background: "#0f172a",
-  padding: "10px",
-  borderRadius: "8px",
+  padding: "12px",
+  borderRadius: "10px",
   marginBottom: "8px",
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
+  gap: "12px",
   color: "white",
   textDecoration: "none",
 };
