@@ -50,11 +50,11 @@ else:
 
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv("MYSQL_HOST", "mysql-rolexbett.alwaysdata.net"),
-        user=os.getenv("MYSQL_USER", "rolexbett"),
-        password=os.getenv("MYSQL_PASSWORD", "modcom1234"),
-        database=os.getenv("MYSQL_DATABASE", "rolexbett_football"),
-        port=int(os.getenv("MYSQL_PORT", 3306))
+        host=os.getenv("MYSQL_HOST"),
+        user=os.getenv("MYSQL_USER"),
+        password=os.getenv("MYSQL_PASSWORD"),
+        database=os.getenv("MYSQL_DATABASE"),
+        port=int(os.getenv("MYSQL_PORT", "3306"))
     )
 
 
