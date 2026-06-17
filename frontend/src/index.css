@@ -191,7 +191,6 @@ nav::-webkit-scrollbar {
     font-size: 16px;
   }
 }
-
 @media (max-width: 420px) {
   .page {
     padding: 14px;
@@ -209,8 +208,9 @@ nav::-webkit-scrollbar {
   .bottom-nav-link small {
     font-size: 10px;
   }
+}
 
-  .site-footer {
+.site-footer {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -228,5 +228,4 @@ nav::-webkit-scrollbar {
 .site-footer a:hover {
   color: #ffffff;
   text-decoration: underline;
-}
 }
