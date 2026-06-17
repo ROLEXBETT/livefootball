@@ -12,6 +12,11 @@ import PlayerDetails from "./pages/PlayerDetails";
 import Favorites from "./pages/Favorites";
 import TopScorers from "./pages/TopScorers";
 
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Terms from "./pages/Terms";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+
 import WorldCup from "./pages/WorldCup";
 import Stadiums from "./pages/Stadiums";
 import WorldCupTopScorers from "./pages/WorldCupTopScorers";
@@ -62,7 +67,12 @@ function App() {
           <Route path="/team/:id" element={<TeamDetails />} />
           <Route path="/player/:id" element={<PlayerDetails />} />
 
-          <Route path="/favorites" element={<Favorites />} />
+                   <Route path="/favorites" element={<Favorites />} />
+
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
 
           <Route
             path="/WorldCupBracket"
@@ -73,6 +83,13 @@ function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+            <footer className="site-footer">
+        <Link to="/privacy-policy">Privacy Policy</Link>
+        <Link to="/terms">Terms</Link>
+        <Link to="/about">About</Link>
+        <Link to="/contact">Contact</Link>
+      </footer>
 
       <nav className="mobile-bottom-nav" aria-label="Mobile bottom navigation">
         <Link to="/" className="bottom-nav-link">

@@ -209,4 +209,24 @@ nav::-webkit-scrollbar {
   .bottom-nav-link small {
     font-size: 10px;
   }
+
+  .site-footer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 24px 16px 110px;
+  color: #cbd5e1;
+}
+
+.site-footer a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.site-footer a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
 }

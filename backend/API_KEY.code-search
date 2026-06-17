@@ -1,0 +1,20 @@
+# Query: API_KEY
+# ContextLines: 1
+
+4 results - 2 files
+
+backend\app.py:
+  18  
+  19: API_KEY = os.getenv("API_FOOTBALL_KEY")
+  20  
+  21  HEADERS = {
+  22:     "x-apisports-key": API_KEY
+  23  }
+
+backend\goal_watcher.py:
+  5  
+  6: API_KEY = "98f7765342fc7219051329e3c2f453c2"
+  7  
+  8  HEADERS = {
+  9:     "x-apisports-key": API_KEY
+  10  }
