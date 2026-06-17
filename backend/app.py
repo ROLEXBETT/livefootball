@@ -16,11 +16,13 @@ CORS(app)
 # CONFIG
 # =========================
 
-API_KEY = os.getenv("API_FOOTBALL_KEY", "af5e9db0bef8b34a4eff99bc3c1941ca")
+API_KEY = os.getenv("API_FOOTBALL_KEY")
 
 HEADERS = {
-    "x-apisports-key": API_KEY
+    "x-apisports-key": API_KEY or ""
 }
+
+API_BASE_URL = "https://v3.football.api-sports.io"
 
 WORLD_CUP_LEAGUE_ID = 1
 WORLD_CUP_SEASON = 2022
