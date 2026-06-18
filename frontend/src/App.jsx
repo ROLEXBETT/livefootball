@@ -17,6 +17,9 @@ import Terms from "./pages/Terms";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
+import InsightsGrid from "./pages/InsightsGrid";
+import ArticleDetail from "./pages/ArticleDetail";
+
 import WorldCup from "./pages/WorldCup";
 import Stadiums from "./pages/Stadiums";
 import WorldCupTopScorers from "./pages/WorldCupTopScorers";
@@ -74,6 +77,9 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
 
+          <Route path="/insights" element={<InsightsGrid />} />
+          <Route path="/insights/:slug" element={<ArticleDetail />} /> 
+
           <Route
             path="/WorldCupBracket"
             element={<Navigate to="/worldcup/bracket" replace />}
@@ -84,15 +90,15 @@ function App() {
         </Routes>
       </main>
 
-            <footer className="site-footer">
-        <Link to="/privacy-policy">Privacy Policy</Link>
-        <Link to="/terms">Terms</Link>
-        <Link to="/about">About</Link>
-        <Link to="/contact">Contact</Link>
-      </footer>
-
-      <nav className="mobile-bottom-nav" aria-label="Mobile bottom navigation">
-        <Link to="/" className="bottom-nav-link">
+          <footer className="site-footer">
+            <Link to="/insights">Insights</Link>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms">Terms</Link>
+            <Link to="/about">About</Link>
+            <Link to="/contact">Contact</Link>
+          </footer>
+         <nav className="mobile-bottom-nav" aria-label="Mobile bottom navigation">
+         <Link to="/" className="bottom-nav-link">
           <span>🏠</span>
           <small>Home</small>
         </Link>
