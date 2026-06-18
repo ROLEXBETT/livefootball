@@ -25,7 +25,7 @@ HEADERS = {
 API_BASE_URL = "https://v3.football.api-sports.io"
 
 WORLD_CUP_LEAGUE_ID = 1
-WORLD_CUP_SEASON = 2022
+WORLD_CUP_SEASON = 2026
 
 cache = {}
 DEFAULT_CACHE_DURATION = timedelta(hours=6)
