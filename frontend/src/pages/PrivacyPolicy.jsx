@@ -8,6 +8,7 @@ export default function PrivacyPolicy() {
           LivePulse respects your privacy. This Privacy Policy explains how we
           collect, use, and protect information when you use our website and app.
         </p>
+        <p className="last-updated">Last updated: June 2026</p>
       </section>
 
       <section className="info-card">
