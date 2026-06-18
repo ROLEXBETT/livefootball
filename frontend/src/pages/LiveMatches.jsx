@@ -7,7 +7,6 @@ import Loader from "../components/Loader";
 function LiveMatches() {
   const [matches, setMatches] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
 
   useEffect(() => {
     fetchMatches();
@@ -19,24 +18,12 @@ function LiveMatches() {
 
   const fetchMatches = async () => {
     try {
-      setMessage("");
-
       const res = await API.get("/live");
 
       const hasApiError =
         res.data.errors && Object.keys(res.data.errors).length > 0;
 
       if (hasApiError) {
-        const apiLimitMessage = res.data.errors.requests;
-
-        if (apiLimitMessage) {
-          setMessage(
-            "API request limit reached for today. Live scores will be available again when the API limit resets."
-          );
-        } else {
-          setMessage("Unable to load live matches right now.");
-        }
-
         setMatches([]);
         return;
       }
@@ -44,9 +31,6 @@ function LiveMatches() {
       setMatches(res.data.response || []);
     } catch (error) {
       console.error("Live matches error:", error);
-      setMessage(
-        "Unable to connect to the backend. Make sure your Flask server is running."
-      );
       setMatches([]);
     } finally {
       setLoading(false);
@@ -54,8 +38,6 @@ function LiveMatches() {
   };
 
   if (loading) return <Loader />;
-
-  const isApiLimitMessage = message.includes("API request limit");
 
   return (
     <div className="page">
@@ -65,21 +47,6 @@ function LiveMatches() {
         Follow live football scores and match updates.
       </p>
 
-      {message && (
-        <div
-          style={{
-            background: isApiLimitMessage ? "#78350f" : "#7f1d1d",
-            color: isApiLimitMessage ? "#fde68a" : "white",
-            padding: "18px",
-            borderRadius: "14px",
-            marginBottom: "20px",
-            maxWidth: "640px",
-          }}
-        >
-          {message}
-        </div>
-      )}
-
       {matches.length === 0 ? (
         <div
           style={{
@@ -88,7 +55,7 @@ function LiveMatches() {
             borderRadius: "16px",
             marginTop: "20px",
             color: "#cbd5e1",
-            maxWidth: "640px",
+            maxWidth: "720px",
           }}
         >
           <h2 style={{ color: "white", marginTop: 0 }}>
@@ -96,8 +63,8 @@ function LiveMatches() {
           </h2>
 
           <p>
-            There are no football matches being played live at the moment. Check
-            the World Cup fixtures or come back later.
+            Live football matches will appear here automatically when games are
+            being played. Check the World Cup fixtures or come back later.
           </p>
 
           <Link
@@ -117,7 +84,7 @@ function LiveMatches() {
           </Link>
         </div>
       ) : (
-        <div className="page">
+        <div>
           {matches.map((match) => (
             <MatchCard key={match.fixture.id} match={match} />
           ))}
