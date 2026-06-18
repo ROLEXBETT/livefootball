@@ -43,7 +43,7 @@ function Navbar() {
         }}
       >
         <span>⚽</span>
-        <span>Football Live</span>
+        <span>LivePulse</span>
       </NavLink>
 
       <NavLink to="/" style={linkStyle}>
