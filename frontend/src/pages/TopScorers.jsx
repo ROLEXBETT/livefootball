@@ -96,9 +96,7 @@ function TopScorers() {
       if (hasApiError) {
         setPlayers(FALLBACK_SCORERS);
         setUsingFallback(true);
-        setMessage(
-          "Live top scorers could not be loaded right now. Showing saved sample data."
-        );
+        setMessage("");
         return;
       }
 
@@ -107,9 +105,7 @@ function TopScorers() {
       if (scorers.length === 0) {
         setPlayers(FALLBACK_SCORERS);
         setUsingFallback(true);
-        setMessage(
-          "No live top scorers are available right now. Showing saved sample data."
-        );
+        setMessage("");
         return;
       }
 
@@ -118,9 +114,7 @@ function TopScorers() {
       console.error("Top scorers error:", error);
       setPlayers(FALLBACK_SCORERS);
       setUsingFallback(true);
-      setMessage(
-        "Unable to connect to the backend. Showing saved sample top scorers."
-      );
+      setMessage("");
     } finally {
       setLoading(false);
     }

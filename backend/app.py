@@ -27,6 +27,10 @@ API_BASE_URL = "https://v3.football.api-sports.io"
 WORLD_CUP_LEAGUE_ID = 1
 WORLD_CUP_SEASON = 2026
 
+# API-Football uses the season starting year.
+# Example: Premier League 2025/2026 = 2025
+CURRENT_SEASON = int(os.getenv("CURRENT_SEASON", "2025"))
+
 cache = {}
 DEFAULT_CACHE_DURATION = timedelta(hours=6)
 
@@ -203,23 +207,9 @@ def search_team(team_name):
     return jsonify(data)
 
 
-@app.route("/api/team/<team_id>")
-def team_details(team_id):
-    data = get_cached_or_fetch(
-        f"team_details_{team_id}",
-        "https://v3.football.api-sports.io/teams",
-        {
-            "id": team_id
-        },
-        cache_duration=timedelta(hours=12)
-    )
-
-    return jsonify(data)
-
-
 @app.route("/api/team-players/<team_id>")
 def team_players(team_id):
-    season = 2024
+    season = CURRENT_SEASON
 
     data = get_cached_or_fetch(
         f"team_players_{team_id}_{season}",
@@ -236,7 +226,7 @@ def team_players(team_id):
 
 @app.route("/api/player/<player_id>")
 def player_details(player_id):
-    season = 2024
+    season = CURRENT_SEASON
 
     data = get_cached_or_fetch(
         f"player_details_{player_id}_{season}",
@@ -251,13 +241,9 @@ def player_details(player_id):
     return jsonify(data)
 
 
-# =========================
-# LEAGUE STANDINGS / SCORERS
-# =========================
-
 @app.route("/api/standings/<league_id>")
 def standings(league_id):
-    season = 2024
+    season = CURRENT_SEASON
 
     data = get_cached_or_fetch(
         f"standings_{league_id}_{season}",
@@ -274,7 +260,7 @@ def standings(league_id):
 
 @app.route("/api/topscorers/<league_id>")
 def top_scorers(league_id):
-    season = 2024
+    season = CURRENT_SEASON
 
     data = get_cached_or_fetch(
         f"topscorers_{league_id}_{season}",

@@ -97,7 +97,7 @@ function WorldCupTeamStats() {
     } catch (error) {
       console.error("World Cup team stats error:", error);
       loadFallbackStats(
-        "Unable to connect to the backend. Showing saved sample statistics."
+        ". Showing saved sample statistics."
       );
     } finally {
       setLoading(false);

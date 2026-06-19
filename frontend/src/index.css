@@ -455,3 +455,133 @@ nav::-webkit-scrollbar {
   color: #94a3b8;
   font-size: 0.95rem;
 }
+
+/* =========================
+   LivePulse Mobile/Desktop Navbar
+========================= */
+
+.app-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.98);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+  padding: 14px 18px 12px;
+}
+
+.navbar-brand-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-size: 42px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.navbar-logo {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.navbar-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.navbar-menu-row::-webkit-scrollbar {
+  display: none;
+}
+
+.navbar-item {
+  min-width: 110px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: rgba(30, 41, 59, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  color: #e2e8f0 !important;
+  text-decoration: none !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.navbar-item-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.navbar-item-label {
+  font-size: 0.9rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.navbar-item.active {
+  color: #38bdf8 !important;
+  background: rgba(56, 189, 248, 0.15);
+  border-color: rgba(56, 189, 248, 0.45);
+}
+
+.navbar-item:hover {
+  background: rgba(51, 65, 85, 0.95);
+}
+
+/* Hide old bottom navigation */
+.mobile-bottom-nav,
+.bottom-nav {
+  display: none !important;
+}
+
+/* Leave room for AdMob banner */
+.page {
+  padding-bottom: 120px;
+}
+
+@media (max-width: 640px) {
+  .app-navbar {
+    padding: 14px 14px 10px;
+  }
+
+  .navbar-brand {
+    font-size: 38px;
+  }
+
+  .navbar-logo {
+    font-size: 36px;
+  }
+
+  .navbar-menu-row {
+    gap: 8px;
+  }
+
+  .navbar-item {
+    min-width: 86px;
+    padding: 10px 10px;
+    border-radius: 15px;
+  }
+
+  .navbar-item-icon {
+    font-size: 21px;
+  }
+
+  .navbar-item-label {
+    font-size: 0.78rem;
+  }
+}

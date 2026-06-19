@@ -31,17 +31,13 @@ function WorldCupTeams() {
       } else {
         setTeams(FALLBACK_WORLD_CUP_TEAMS);
         setUsingFallback(true);
-        setMessage(
-          "World Cup teams could not be loaded right now. Showing saved teams."
-        );
+        setMessage("");
       }
     } catch (error) {
       console.error("World Cup teams error:", error);
       setTeams(FALLBACK_WORLD_CUP_TEAMS);
       setUsingFallback(true);
-      setMessage(
-        "Unable to connect to the backend. Showing saved World Cup teams."
-      );
+      setMessage("");
     } finally {
       setLoading(false);
     }

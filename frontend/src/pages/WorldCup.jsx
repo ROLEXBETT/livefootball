@@ -217,9 +217,7 @@ function WorldCup() {
           liveStandings.length > 0 ? liveStandings : FALLBACK_STANDINGS
         );
         setUsingFallback(true);
-        setMessage(
-          "Some World Cup data could not be loaded right now. Showing saved tournament data where needed."
-        );
+        setMessage("");
         return;
       }
 
@@ -230,9 +228,7 @@ function WorldCup() {
       setFixtures(FALLBACK_FIXTURES);
       setStandings(FALLBACK_STANDINGS);
       setUsingFallback(true);
-      setMessage(
-        "Unable to connect to the backend. Showing saved World Cup data."
-      );
+      setMessage("");
     } finally {
       setLoading(false);
     }

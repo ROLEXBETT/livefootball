@@ -114,7 +114,7 @@ function TeamDetails() {
     } catch (error) {
       console.error("Team details error:", error);
       loadFallbackTeam(
-        "Unable to connect to the backend. Showing saved sample team data."
+        ". Showing saved sample team data."
       );
     } finally {
       setLoading(false);

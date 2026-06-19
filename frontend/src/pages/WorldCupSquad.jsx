@@ -87,7 +87,7 @@ function WorldCupSquad() {
     } catch (error) {
       console.error("World Cup squad error:", error);
       loadFallbackSquad(
-        "Unable to connect to the backend. Showing saved sample squad data."
+        ". Showing saved sample squad data."
       );
     } finally {
       setLoading(false);

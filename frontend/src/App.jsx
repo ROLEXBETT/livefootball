@@ -1,4 +1,5 @@
 import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { useEffect } from "react";
 
 import Navbar from "./components/Navbar";
 
@@ -28,14 +29,25 @@ import WorldCupBracket from "./pages/WorldCupBracket";
 import WorldCupTeamStats from "./pages/WorldCupTeamStats";
 import WorldCupTeams from "./pages/WorldCupTeams";
 
+import { initializeAdMob, showBannerAd } from "./services/admob";
+
 function App() {
+  useEffect(() => {
+    const startAds = async () => {
+      await initializeAdMob();
+      await showBannerAd();
+    };
+
+    startAds();
+  }, []);
+
   return (
     <div
       style={{
         minHeight: "100vh",
         background: "#0f172a",
         color: "white",
-        paddingBottom: "90px",
+        paddingBottom: "120px",
         overflowX: "hidden",
       }}
     >
@@ -70,7 +82,7 @@ function App() {
           <Route path="/team/:id" element={<TeamDetails />} />
           <Route path="/player/:id" element={<PlayerDetails />} />
 
-                   <Route path="/favorites" element={<Favorites />} />
+          <Route path="/favorites" element={<Favorites />} />
 
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />
@@ -78,7 +90,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
 
           <Route path="/insights" element={<InsightsGrid />} />
-          <Route path="/insights/:slug" element={<ArticleDetail />} /> 
+          <Route path="/insights/:slug" element={<ArticleDetail />} />
 
           <Route
             path="/WorldCupBracket"
@@ -90,39 +102,13 @@ function App() {
         </Routes>
       </main>
 
-          <footer className="site-footer">
-            <Link to="/insights">Insights</Link>
-            <Link to="/privacy-policy">Privacy Policy</Link>
-            <Link to="/terms">Terms</Link>
-            <Link to="/about">About</Link>
-            <Link to="/contact">Contact</Link>
-          </footer>
-         <nav className="mobile-bottom-nav" aria-label="Mobile bottom navigation">
-         <Link to="/" className="bottom-nav-link">
-          <span>🏠</span>
-          <small>Home</small>
-        </Link>
-
-        <Link to="/live" className="bottom-nav-link">
-          <span>🔴</span>
-          <small>Live</small>
-        </Link>
-
-        <Link to="/worldcup" className="bottom-nav-link">
-          <span>🌎</span>
-          <small>World Cup</small>
-        </Link>
-
-        <Link to="/standings" className="bottom-nav-link">
-          <span>📊</span>
-          <small>Stats</small>
-        </Link>
-
-        <Link to="/favorites" className="bottom-nav-link">
-          <span>⭐</span>
-          <small>Saved</small>
-        </Link>
-      </nav>
+      <footer className="site-footer">
+        <Link to="/insights">Insights</Link>
+        <Link to="/privacy-policy">Privacy Policy</Link>
+        <Link to="/terms">Terms</Link>
+        <Link to="/about">About</Link>
+        <Link to="/contact">Contact</Link>
+      </footer>
     </div>
   );
 }

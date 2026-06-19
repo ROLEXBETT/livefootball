@@ -102,16 +102,12 @@ function WorldCupTopScorers() {
 
       setPlayers(FALLBACK_WORLD_CUP_SCORERS);
       setUsingFallback(true);
-      setMessage(
-        "World Cup top scorers could not be loaded right now. Showing saved sample data."
-      );
+      setMessage("");
     } catch (error) {
       console.error("World Cup top scorers error:", error);
       setPlayers(FALLBACK_WORLD_CUP_SCORERS);
       setUsingFallback(true);
-      setMessage(
-        "Unable to connect to the backend. Showing saved World Cup top scorers."
-      );
+      setMessage("");
     } finally {
       setLoading(false);
     }
