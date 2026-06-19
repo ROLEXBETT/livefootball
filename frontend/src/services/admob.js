@@ -5,7 +5,7 @@ import {
   BannerAdPosition,
 } from "@capacitor-community/admob";
 
-const TEST_BANNER_ID = "ca-app-pub-3940256099942544/6300978111";
+const BANNER_ID = "ca-app-pub-4998749451565889/9086882054";
 
 export async function initializeAdMob() {
   if (!Capacitor.isNativePlatform()) return;
@@ -23,11 +23,11 @@ export async function showBannerAd() {
 
   try {
     await AdMob.showBanner({
-      adId: TEST_BANNER_ID,
+      adId: BANNER_ID,
       adSize: BannerAdSize.BANNER,
       position: BannerAdPosition.BOTTOM_CENTER,
       margin: 70,
-      isTesting: true,
+      isTesting: false,
     });
 
     console.log("AdMob banner shown");
