@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import MatchStatistics from "../components/MatchStatistics";
 import HeadToHead from "../components/HeadToHead";
 
+
 function MatchDetails() {
   const { id } = useParams();
 

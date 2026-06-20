@@ -4,6 +4,7 @@ import API from "../services/api";
 import Loader from "../components/Loader";
 import { requestNotificationPermission } from "../firebaseMessaging";
 
+
 const FALLBACK_TEAMS = {
   6: {
     team: {

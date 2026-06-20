@@ -1,5 +1,7 @@
-import { Routes, Route, Link, Navigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Routes, Route, Link, Navigate, useNavigate, useLocation } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
+import { App as CapacitorApp } from "@capacitor/app";
 
 import Navbar from "./components/Navbar";
 
@@ -32,6 +34,33 @@ import WorldCupTeams from "./pages/WorldCupTeams";
 import { initializeAdMob, showBannerAd } from "./services/admob";
 
 function App() {
+  const navigate = useNavigate();
+const location = useLocation();
+
+useEffect(() => {
+  if (!Capacitor.isNativePlatform()) return;
+
+  let listener;
+
+  const setupBackButton = async () => {
+    listener = await CapacitorApp.addListener("backButton", () => {
+      if (location.pathname !== "/") {
+        navigate(-1);
+      } else {
+        CapacitorApp.exitApp();
+      }
+    });
+  };
+
+  setupBackButton();
+
+  return () => {
+    if (listener) {
+      listener.remove();
+    }
+  };
+}, [location.pathname, navigate]);
+
   useEffect(() => {
     const startAds = async () => {
       await initializeAdMob();

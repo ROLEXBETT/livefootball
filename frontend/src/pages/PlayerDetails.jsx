@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import API from "../services/api";
 import Loader from "../components/Loader";
 
+
 function PlayerDetails() {
 
   const { id } = useParams();

@@ -585,3 +585,22 @@ nav::-webkit-scrollbar {
     font-size: 0.78rem;
   }
 }
+
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 18px 0;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  background: rgba(30, 41, 59, 0.95);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background: rgba(51, 65, 85, 0.98);
+}

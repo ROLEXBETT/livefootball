@@ -1,6 +1,7 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 import { insights } from "../data/insights";
 
+
 export default function ArticleDetail() {
   const { slug } = useParams();
 
