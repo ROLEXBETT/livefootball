@@ -20,6 +20,8 @@ import Terms from "./pages/Terms";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 
+import FootballGlossary from "./pages/FootballGlossary";
+
 import InsightsGrid from "./pages/InsightsGrid";
 import ArticleDetail from "./pages/ArticleDetail";
 
@@ -112,6 +114,8 @@ useEffect(() => {
           <Route path="/player/:id" element={<PlayerDetails />} />
 
           <Route path="/favorites" element={<Favorites />} />
+
+          <Route path="/glossary" element={<FootballGlossary />} />
 
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<Terms />} />

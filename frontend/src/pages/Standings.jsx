@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import API from "../services/api";
 import Loader from "../components/Loader";
+import RefreshButton from "../components/RefreshButton";
+import LastUpdated from "../components/LastUpdated";
+import EmptyState from "../components/EmptyState";
 
 function Standings() {
   const leagues = [
@@ -14,6 +17,7 @@ function Standings() {
   const [leagueId, setLeagueId] = useState(39);
   const [table, setTable] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   const selectedLeague =
     leagues.find((league) => league.id === leagueId)?.name || "Standings";
@@ -33,6 +37,7 @@ function Standings() {
 
       if (hasApiError) {
         setTable([]);
+        setLastUpdated(new Date());
         return;
       }
 
@@ -40,24 +45,34 @@ function Standings() {
         res.data?.response?.[0]?.league?.standings?.[0] || [];
 
       setTable(standings);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error("Standings error:", error);
       setTable([]);
+      setLastUpdated(new Date());
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <Loader />;
+  if (loading && !lastUpdated) return <Loader />;
 
   return (
     <div className="page">
       <h1>📊 {selectedLeague} Table</h1>
 
       <p style={{ color: "#cbd5e1", marginBottom: "20px" }}>
-        View current league tables, points, matches played, wins, draws, and
+        View current league tables, points, matches played, wins, draws and
         losses.
       </p>
+
+      <RefreshButton
+        onClick={loadTable}
+        loading={loading}
+        label="Refresh standings"
+      />
+
+      <LastUpdated time={lastUpdated} />
 
       <select
         value={leagueId}
@@ -81,8 +96,18 @@ function Standings() {
         ))}
       </select>
 
+      {loading && lastUpdated && (
+        <p style={{ color: "#94a3b8", marginBottom: "14px" }}>
+          Updating standings...
+        </p>
+      )}
+
       {table.length === 0 ? (
-        <EmptyStandings selectedLeague={selectedLeague} />
+        <EmptyState
+          icon="📊"
+          title="Standings are currently being updated"
+          message={`${selectedLeague} standings are not available right now. League tables will appear here automatically when current competition data is available.`}
+        />
       ) : (
         <div
           style={{
@@ -182,34 +207,6 @@ function Standings() {
           </table>
         </div>
       )}
-    </div>
-  );
-}
-
-function EmptyStandings({ selectedLeague }) {
-  return (
-    <div
-      style={{
-        background: "#1e293b",
-        padding: "24px",
-        borderRadius: "16px",
-        border: "1px solid #263449",
-        color: "#cbd5e1",
-        maxWidth: "720px",
-      }}
-    >
-      <h2 style={{ color: "white", marginTop: 0 }}>
-        Standings are currently being updated
-      </h2>
-
-      <p style={{ marginBottom: "12px", lineHeight: 1.6 }}>
-        Current {selectedLeague} standings are not available right now.
-      </p>
-
-      <p style={{ marginBottom: 0, lineHeight: 1.6 }}>
-        League tables will appear here automatically when current competition
-        data is available.
-      </p>
     </div>
   );
 }

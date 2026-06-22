@@ -85,13 +85,13 @@ function Home() {
             marginBottom: 0,
           }}
         >
-          Follow live scores, World Cup fixtures, squads, standings, stadiums,
-          top scorers, match stats, and your favorite teams.
+          Follow live scores, fixtures, World Cup updates, standings, top
+          scorers, match stats, football insights and your favorite teams.
         </p>
 
         <div style={buttonRowStyle}>
           <Link to="/live" style={primaryButtonStyle}>
-            🔴 Live Matches
+            🔴 Open Live Scores
           </Link>
 
           <Link to="/worldcup" style={secondaryButtonStyle}>
@@ -106,8 +106,19 @@ function Home() {
         <div className="card-grid">
           <Link to="/live" style={cardStyle}>
             <div>
-              <h2>🔴 Live</h2>
-              <p style={cardTextStyle}>See matches currently being played.</p>
+              <h2>🔴 Live Scores</h2>
+              <p style={cardTextStyle}>
+                View live, upcoming and recently finished football matches.
+              </p>
+            </div>
+          </Link>
+
+          <Link to="/worldcup" style={cardStyle}>
+            <div>
+              <h2>🌎 World Cup</h2>
+              <p style={cardTextStyle}>
+                Fixtures, groups, squads, stadiums and tournament overview.
+              </p>
             </div>
           </Link>
 
@@ -115,15 +126,26 @@ function Home() {
             <div>
               <h2>📊 Standings</h2>
               <p style={cardTextStyle}>
-                View league tables and team rankings.
+                View league tables, points and team rankings.
               </p>
             </div>
           </Link>
 
           <Link to="/topscorers" style={cardStyle}>
             <div>
-              <h2>⚽ Scorers</h2>
-              <p style={cardTextStyle}>Track the leading goal scorers.</p>
+              <h2>⚽ Top Scorers</h2>
+              <p style={cardTextStyle}>
+                Track the leading goal scorers across competitions.
+              </p>
+            </div>
+          </Link>
+
+          <Link to="/insights" style={cardStyle}>
+            <div>
+              <h2>🧠 Insights</h2>
+              <p style={cardTextStyle}>
+                Read football guides, tactics and tournament articles.
+              </p>
             </div>
           </Link>
 
@@ -133,51 +155,6 @@ function Home() {
               <p style={cardTextStyle}>
                 Save and follow your favorite teams.
               </p>
-            </div>
-          </Link>
-        </div>
-      </section>
-
-      <section>
-        <h2 style={sectionTitleStyle}>World Cup Features</h2>
-
-        <div className="card-grid">
-          <Link to="/worldcup" style={cardStyle}>
-            <div>
-              <h2>🌎 World Cup</h2>
-              <p style={cardTextStyle}>
-                Fixtures, groups, and tournament overview.
-              </p>
-            </div>
-          </Link>
-
-          <Link to="/worldcup/bracket" style={cardStyle}>
-            <div>
-              <h2>🏆 Bracket</h2>
-              <p style={cardTextStyle}>Follow the knockout stage path.</p>
-            </div>
-          </Link>
-
-          <Link to="/worldcup/squads" style={cardStyle}>
-            <div>
-              <h2>👥 Squads</h2>
-              <p style={cardTextStyle}>
-                Browse national teams and players.
-              </p>
-            </div>
-          </Link>
-
-          <Link to="/worldcup/stadiums" style={cardStyle}>
-            <div>
-              <h2>🏟️ Stadiums</h2>
-              <p style={cardTextStyle}>Explore host stadiums and venues.</p>
-            </div>
-          </Link>
-
-          <Link to="/worldcup/topscorers" style={cardStyle}>
-            <div>
-              <h2>⚽ Top Scorers</h2>
-              <p style={cardTextStyle}>See the World Cup goal leaders.</p>
             </div>
           </Link>
         </div>

@@ -602,3 +602,59 @@ a {
     width: 100%;
   }
 }
+
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 16px 0;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: rgba(56, 189, 248, 0.14);
+  color: #e0f2fe;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.refresh-button:hover {
+  background: rgba(56, 189, 248, 0.22);
+}
+
+.refresh-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.last-updated {
+  margin: -6px 0 16px 0;
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  background: #1e293b;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 18px;
+  padding: 26px 20px;
+  color: #cbd5e1;
+  text-align: center;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.22);
+}
+
+.empty-state-icon {
+  font-size: 38px;
+  margin-bottom: 10px;
+}
+
+.empty-state h2 {
+  margin: 0 0 8px 0;
+  color: #ffffff;
+  font-size: 1.25rem;
+}
+
+.empty-state p {
+  margin: 0;
+  line-height: 1.6;
+}

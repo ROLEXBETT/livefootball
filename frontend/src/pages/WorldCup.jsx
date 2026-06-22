@@ -2,183 +2,15 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../services/api";
 import Loader from "../components/Loader";
-
-const FALLBACK_FIXTURES = [
-  {
-    fixture: {
-      id: 66456904,
-      date: "2026-06-11T19:00:00Z",
-      status: { long: "Scheduled", short: "NS" },
-    },
-    teams: {
-      home: {
-        name: "Mexico",
-        logo: "https://media.api-sports.io/football/teams/16.png",
-      },
-      away: {
-        name: "South Africa",
-        logo: "https://media.api-sports.io/football/teams/24.png",
-      },
-    },
-    goals: { home: null, away: null },
-  },
-  {
-    fixture: {
-      id: 66456940,
-      date: "2026-06-13T01:00:00Z",
-      status: { long: "Scheduled", short: "NS" },
-    },
-    teams: {
-      home: {
-        name: "United States",
-        logo: "https://media.api-sports.io/football/teams/2384.png",
-      },
-      away: {
-        name: "Paraguay",
-        logo: "https://media.api-sports.io/football/teams/14.png",
-      },
-    },
-    goals: { home: null, away: null },
-  },
-  {
-    fixture: {
-      id: 66456928,
-      date: "2026-06-13T22:00:00Z",
-      status: { long: "Scheduled", short: "NS" },
-    },
-    teams: {
-      home: {
-        name: "Brazil",
-        logo: "https://media.api-sports.io/football/teams/6.png",
-      },
-      away: {
-        name: "Morocco",
-        logo: "https://media.api-sports.io/football/teams/31.png",
-      },
-    },
-    goals: { home: null, away: null },
-  },
-  {
-    fixture: {
-      id: 66457018,
-      date: "2026-06-17T01:00:00Z",
-      status: { long: "Scheduled", short: "NS" },
-    },
-    teams: {
-      home: {
-        name: "Argentina",
-        logo: "https://media.api-sports.io/football/teams/26.png",
-      },
-      away: {
-        name: "Algeria",
-        logo: "https://media.api-sports.io/football/teams/34.png",
-      },
-    },
-    goals: { home: null, away: null },
-  },
-];
-
-const FALLBACK_STANDINGS = [
-  {
-    league: {
-      id: 1,
-      name: "FIFA World Cup",
-      standings: [
-        [
-          {
-            rank: 1,
-            group: "Group A",
-            team: {
-              id: 16,
-              name: "Mexico",
-              logo: "https://media.api-sports.io/football/teams/16.png",
-            },
-            points: 3,
-          },
-          {
-            rank: 2,
-            group: "Group A",
-            team: {
-              id: 17,
-              name: "South Korea",
-              logo: "https://media.api-sports.io/football/teams/17.png",
-            },
-            points: 3,
-          },
-          {
-            rank: 3,
-            group: "Group A",
-            team: {
-              id: 24,
-              name: "South Africa",
-              logo: "https://media.api-sports.io/football/teams/24.png",
-            },
-            points: 0,
-          },
-          {
-            rank: 4,
-            group: "Group A",
-            team: {
-              id: 21,
-              name: "Czechia",
-              logo: "https://media.api-sports.io/football/teams/21.png",
-            },
-            points: 0,
-          },
-        ],
-        [
-          {
-            rank: 1,
-            group: "Group B",
-            team: {
-              id: 5529,
-              name: "Canada",
-              logo: "https://media.api-sports.io/football/teams/5529.png",
-            },
-            points: 1,
-          },
-          {
-            rank: 2,
-            group: "Group B",
-            team: {
-              id: 1118,
-              name: "Bosnia and Herzegovina",
-              logo: "https://media.api-sports.io/football/teams/1118.png",
-            },
-            points: 1,
-          },
-          {
-            rank: 3,
-            group: "Group B",
-            team: {
-              id: 1569,
-              name: "Qatar",
-              logo: "https://media.api-sports.io/football/teams/1569.png",
-            },
-            points: 0,
-          },
-          {
-            rank: 4,
-            group: "Group B",
-            team: {
-              id: 15,
-              name: "Switzerland",
-              logo: "https://media.api-sports.io/football/teams/15.png",
-            },
-            points: 0,
-          },
-        ],
-      ],
-    },
-  },
-];
+import RefreshButton from "../components/RefreshButton";
+import LastUpdated from "../components/LastUpdated";
+import EmptyState from "../components/EmptyState";
 
 function WorldCup() {
   const [fixtures, setFixtures] = useState([]);
   const [standings, setStandings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
-  const [usingFallback, setUsingFallback] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
   useEffect(() => {
     loadWorldCup();
@@ -187,8 +19,6 @@ function WorldCup() {
   const loadWorldCup = async () => {
     try {
       setLoading(true);
-      setMessage("");
-      setUsingFallback(false);
 
       const [fixturesRes, standingsRes] = await Promise.all([
         API.get("/worldcup/fixtures"),
@@ -203,61 +33,50 @@ function WorldCup() {
         standingsRes.data.errors &&
         Object.keys(standingsRes.data.errors).length > 0;
 
-      const liveFixtures = fixturesRes.data.response || [];
-      const liveStandings = standingsRes.data.response || [];
+      const liveFixtures = fixturesHasError
+        ? []
+        : fixturesRes.data.response || [];
 
-      if (
-        fixturesHasError ||
-        standingsHasError ||
-        liveFixtures.length === 0 ||
-        liveStandings.length === 0
-      ) {
-        setFixtures(liveFixtures.length > 0 ? liveFixtures : FALLBACK_FIXTURES);
-        setStandings(
-          liveStandings.length > 0 ? liveStandings : FALLBACK_STANDINGS
-        );
-        setUsingFallback(true);
-        setMessage("");
-        return;
-      }
+      const liveStandings = standingsHasError
+        ? []
+        : standingsRes.data.response || [];
 
       setFixtures(liveFixtures);
       setStandings(liveStandings);
+      setLastUpdated(new Date());
     } catch (error) {
       console.error("World Cup loading error:", error);
-      setFixtures(FALLBACK_FIXTURES);
-      setStandings(FALLBACK_STANDINGS);
-      setUsingFallback(true);
-      setMessage("");
+      setFixtures([]);
+      setStandings([]);
+      setLastUpdated(new Date());
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <Loader />;
+  if (loading && !lastUpdated) return <Loader />;
 
   return (
     <div className="page">
       <h1>🌎 FIFA World Cup Hub</h1>
 
-      <p style={{ color: "#cbd5e1", marginBottom: "24px" }}>
+      <p style={{ color: "#cbd5e1", marginBottom: "20px" }}>
         Fixtures, group standings, squads, stadiums, knockout bracket, team
-        stats, and World Cup scorers.
+        stats and World Cup scorers.
       </p>
 
-      {message && (
-        <div
-          style={{
-            background: usingFallback ? "#78350f" : "#7f1d1d",
-            color: usingFallback ? "#fde68a" : "white",
-            padding: "16px",
-            borderRadius: "14px",
-            marginBottom: "24px",
-            maxWidth: "760px",
-          }}
-        >
-          {message}
-        </div>
+      <RefreshButton
+        onClick={loadWorldCup}
+        loading={loading}
+        label="Refresh World Cup"
+      />
+
+      <LastUpdated time={lastUpdated} />
+
+      {loading && lastUpdated && (
+        <p style={{ color: "#94a3b8", marginBottom: "14px" }}>
+          Updating World Cup data...
+        </p>
       )}
 
       <div className="card-grid" style={{ marginBottom: "32px" }}>
@@ -296,8 +115,9 @@ function WorldCup() {
 
       {fixtures.length === 0 ? (
         <EmptyState
-          title="No fixtures available"
-          text="World Cup fixtures could not be loaded right now."
+          icon="📅"
+          title="World Cup fixtures are updating"
+          message="Fixtures could not be loaded right now. Please refresh or check again shortly."
         />
       ) : (
         <div className="card-grid">
@@ -351,8 +171,9 @@ function WorldCup() {
 
       {standings.length === 0 ? (
         <EmptyState
-          title="No standings available"
-          text="World Cup group standings could not be loaded right now."
+          icon="📊"
+          title="World Cup standings are updating"
+          message="Group standings could not be loaded right now. They will appear automatically when current data is available."
         />
       ) : (
         standings.map((group) => (
@@ -422,24 +243,6 @@ function WorldCup() {
           </div>
         ))
       )}
-    </div>
-  );
-}
-
-function EmptyState({ title, text }) {
-  return (
-    <div
-      style={{
-        background: "#1e293b",
-        padding: "24px",
-        borderRadius: "16px",
-        border: "1px solid #263449",
-        color: "#cbd5e1",
-        maxWidth: "640px",
-      }}
-    >
-      <h2 style={{ color: "white", marginTop: 0 }}>{title}</h2>
-      <p style={{ marginBottom: 0 }}>{text}</p>
     </div>
   );
 }

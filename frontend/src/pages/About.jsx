@@ -43,6 +43,7 @@ export default function About() {
             <h3>🌎 World Cup</h3>
             <p>Explore World Cup teams, fixtures, squads, and statistics.</p>
           </div>
+          <p style={{ color: "#94a3b8", marginTop: "24px" }}> Version 1.0.0 </p>
         </div>
       </section>
     </main>
